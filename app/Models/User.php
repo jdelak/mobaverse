@@ -26,6 +26,10 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'current_elo',
+        'best_elo',
+        'account_level',
+        'current_exp'
     ];
 
     /**
@@ -49,6 +53,26 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function cards()
+    {
+        return $this->belongsToMany(Card::class, 'player_cards')->withPivot('quantity');
+    }
+
+    public function decks()
+    {
+        return $this->hasMany(Deck::class);
+    }
+
+    public function games()
+    {
+        return $this->hasMany(GameMatch::class, 'player1_id')->orWhere('player2_id', $this->id);
+    }
+
+    public function matchHistory()
+    {
+        return $this->hasMany(MatchHistory::class);
     }
 
    
